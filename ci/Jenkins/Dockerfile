@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-jdk17
+FROM jenkins/jenkins:alpine 
 
 # Switch to root to install Maven and Docker
 USER root
