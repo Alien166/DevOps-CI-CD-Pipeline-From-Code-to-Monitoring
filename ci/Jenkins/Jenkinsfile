@@ -6,7 +6,7 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/deepakkr35/devops-demo-project.git'
+        git branch: 'main', url: 'https://github.com/Alien166/DevOps-CI-CD-Pipeline-From-Code-to-Monitoring.git'
       }
     }
     stage('Build and Test') {
@@ -28,7 +28,7 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "deepakkr35/demo-java-app:${build_version}"
+        DOCKER_IMAGE = "toba44/demo-java-app:${build_version}"
         REGISTRY_CREDENTIALS = credentials('dockerhub')
       }
       steps {
@@ -43,14 +43,14 @@ pipeline {
     }
     stage('Update Deployment File') {
         environment {
-            GIT_REPO_NAME = "devops-demo-project"
-            GIT_USER_NAME = "deepakkr35"
+            GIT_REPO_NAME = "DevOps-CI-CD-Pipeline-From-Code-to-Monitoring"
+            GIT_USER_NAME = "ِAlien166"
         }
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
-                    git config user.email "deepakkr35@gmail.com"
-                    git config user.name "Deepak Kumar"
+                    git config user.email "abdowagieh@gmail.com"
+                    git config user.name "Alien166"
                     sed -i "s/tag: .*/tag: \"${build_version}\"/" helm/app/values.yaml
                     git add helm/app/values.yaml
                     git commit -m "Update deployment image to version ${build_version}"
