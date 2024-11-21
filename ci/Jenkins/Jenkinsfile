@@ -18,7 +18,7 @@ pipeline {
     }
     stage('Static Code Analysis') {
       environment {
-        SONAR_URL = "http://sonarqube:9000"
+        SONAR_URL = "http://localhost:9000"
       }
       steps {
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -60,4 +60,24 @@ pipeline {
         }
     }
   }
+  post {
+        success {
+            slackSend channel: '#jenkins',
+                      message: "Build SUCCESSFUL for version ${params.build_version}! 🎉",
+                      color: 'good'
+        }
+        failure {
+            slackSend channel: '#jenkins',
+                      message: "Build FAILED for version ${params.build_version}! ❌",
+                      color: 'danger'
+        }
+        always {
+            script {
+                def qualityGate = sh(script: "curl -u $SONAR_AUTH_TOKEN: ${SONAR_URL}/api/qualitygates/project_status?projectKey=demo-java-app", returnStdout: true)
+                slackSend channel: '#jenkins',
+                          message: "SonarQube Quality Gate Report: \n${qualityGate}",
+                          color: 'warning'
+            }
+        }
+    }
 }
