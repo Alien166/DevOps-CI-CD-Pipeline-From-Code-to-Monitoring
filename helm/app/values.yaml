@@ -5,8 +5,8 @@
 replicaCount: 2
 
 image:
-  githubID: deepakkr35
-  repository: demo-java-app
+  githubID: Alien166
+  repository: DevOps-CI-CD-Pipeline-From-Code-to-Monitoring
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: V2.0

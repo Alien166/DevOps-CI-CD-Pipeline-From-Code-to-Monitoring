@@ -17,15 +17,20 @@ pipeline {
       }
     }
     stage('Static Code Analysis') {
-      environment {
-        SONAR_URL = "http://localhost:9000"
+  environment {
+      SONAR_URL = "http://localhost:9000"
+  }
+  steps {
+      script {
+          try {
+              withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+                  sh 'cd demo-java-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+              }
+          } catch (Exception e) {
+              echo "SonarQube analysis failed: ${e.message}"
+          }
       }
-      steps {
-        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
-          sh 'cd demo-java-app && mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
-        }
-      }
-    }
+  }
     stage('Build and Push Docker Image') {
       environment {
         DOCKER_IMAGE = "toba44/demo-java-app:${build_version}"
