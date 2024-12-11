@@ -1,4 +1,4 @@
-FROM jenkins/jenkins
+FROM jenkins/jenkins:jdk21
 
 # Switch to root to install Maven and Docker
 USER root
