@@ -1,36 +1,121 @@
-# DevOps CI/CD Pipeline: GitHub, Jenkins, Maven, SonarQube, Docker, DockerHub, ArgoCD, Helm, Kubernetes, Prometheus, Grafana, Filebeat, OpenSearch, and Kibana
+# DevOps CI/CD Pipeline Documentation
 
 This project demonstrates the complete setup and integration of a comprehensive **DevOps CI/CD pipeline** designed for efficient software development and deployment. It utilizes a variety of tools and technologies, each playing a critical role in the pipeline, providing a fully automated, scalable, and reliable process from code integration to real-time monitoring.
 
-### Key Components of the Pipeline:
+- **Version Control:** GitHub
+- **CI/CD Tools:** Jenkins
+- **Build Tools:** Maven
+- **Code Quality and Security:** SonarQube
+- **Containerization:** Docker and DockerHub
+- **Container Orchestration:** Kubernetes
+- **Application Deployment:** ArgoCD and Helm
+- **Monitoring and Logging:** Prometheus, Grafana, Filebeat, OpenSearch, and Kibana
 
-1. **GitHub**: Used for version control, GitHub stores and manages the source code of the project, enabling easy collaboration and version management among team members. It acts as the central repository for all the code.
+Each section includes detailed explanations, configurations, and relevant screenshots.
 
-2. **Jenkins**: A powerful automation server that is used for automating the building, testing, and deployment processes. Jenkins triggers the pipeline on code commits and integrates with several tools to ensure continuous integration (CI) and continuous delivery (CD).
+---
 
-3. **Maven**: A build management tool that is used to compile, package, and manage dependencies in the project. Maven ensures that the project builds correctly each time changes are made.
+## Prerequisites
+Before proceeding, ensure the following tools are installed and configured:
 
-4. **SonarQube**: Integrated into the pipeline for **code quality analysis**. SonarQube automatically analyzes the code for bugs, vulnerabilities, and code smells, ensuring that the code adheres to industry standards and best practices.
+- **Git** and a GitHub account
+- **Docker** for containerization
+- A **Kubernetes Cluster** (e.g., Minikube, kind, or a cloud-managed service such as EKS , GKE , AKS)
+- **Jenkins** for CI/CD automation
+- **Maven** for build automation
+- **SonarQube** for code quality analysis
+- **ArgoCD** for GitOps deployment
+- **Helm** for Kubernetes package management
+- **Prometheus** and **Grafana** for monitoring
+- **Filebeat**, **OpenSearch**, and **Kibana** for logging and visualization
 
-5. **Docker & DockerHub**: **Docker** is used for containerization, enabling the packaging of the application and its dependencies into portable containers. The images are stored and versioned on **DockerHub**, facilitating easy distribution and deployment across various environments.
+---
 
-6. **ArgoCD** & **Helm**: **ArgoCD** is a declarative, GitOps continuous delivery tool for Kubernetes, allowing the application to be deployed and managed in Kubernetes clusters. **Helm** is used for managing Kubernetes applications by defining, installing, and upgrading even the most complex Kubernetes applications.
+## Step-by-Step Guide
 
-7. **Kubernetes**: The application is deployed to a **Kubernetes cluster**, providing container orchestration, scalability, and management of the application’s lifecycle.
+### 1. **Version Control with GitHub**
+1. Create a repository on GitHub to store your application code and pipeline configurations.
+2. Clone the repository to your local machine:
 
-8. **Prometheus & Grafana**: **Prometheus** collects metrics from various systems within the pipeline, while **Grafana** visualizes those metrics on interactive dashboards. Together, they provide insights into the health, performance, and reliability of the application.
+```bash
+# Clone the repository locally
+$ git clone https://github.com/Alien166/DevOps-CI-CD-Pipeline-From-Code-to-Monitoring.git
+```
+3. Add a sample Java project or any application code you wish to deploy.
 
-9. **Filebeat, OpenSearch, and Kibana**: For **logging and monitoring**, **Filebeat** collects and ships logs from applications and systems to **OpenSearch** for storage and analysis. **Kibana** is then used to create real-time visualizations and dashboards of log data, making it easier to monitor and debug the system.
+### 2. **Setting up Jenkins**
+1. Install Jenkins and required plugins: Maven, Git, Docker, and SonarQube.
+2. Create a new Jenkins job:
+   - Choose **Pipeline Project**.
+   - Configure source code management to pull code from the GitHub repository.
+   - Add build steps to execute Maven commands like `clean install`.
+3. Configure Jenkins to interact with Docker and Kubernetes.
 
-### Benefits of This Setup:
+### 3. **Code Quality Analysis with SonarQube**
+1. Set up a SonarQube server locally or use a cloud instance.
+2. Integrate SonarQube with Jenkins:
+   - Navigate to Jenkins settings and add SonarQube server details (URL and authentication token).
+   - Update Jenkins pipeline to include SonarQube analysis steps.
+3. Add a build step in Jenkins to run SonarQube analysis:
 
-- **Automation**: Every step from code integration to deployment and monitoring is fully automated, reducing manual intervention and errors, leading to faster and more efficient development cycles.
-  
-- **Scalability**: The use of Kubernetes and Helm ensures that the application can scale based on demand, providing the flexibility to handle increasing traffic.
+```bash
+mvn sonar:sonar -Dsonar.projectKey=project-name \
+  -Dsonar.host.url=http://sonarqube-server-url \
+  -Dsonar.login=your-token
+```
 
-- **Reliability**: With tools like Jenkins, Maven, SonarQube, and ArgoCD, the pipeline guarantees that only the highest quality code gets deployed to production, while Prometheus, Grafana, and Kibana help ensure that the system operates smoothly by providing robust observability.
+### 4. **Containerizing with Docker**
+1. Create a `Dockerfile` in the project root directory:
 
-- **Continuous Feedback**: The integration of tools like SonarQube, Prometheus, and Grafana ensures that developers receive continuous feedback on code quality and system performance, enabling them to make improvements quickly and effectively.
+```dockerfile
+# Base image 
+FROM openjdk
+
+# setting artifact path
+ARG artifact=target/demo-java-app.jar
+
+WORKDIR /opt/app
+
+COPY ${artifact} app.jar
+
+# Entrypoint for running app
+ENTRYPOINT ["java","-jar","app.jar"]
+```
+2. Build and push the Docker image:
+
+```bash
+# Build the Docker image
+$ docker build -t username/app-name:tag .
+
+# Push the image to DockerHub
+$ docker push username/app-name:tag
+```
+
+### 5. **Deploying with ArgoCD and Helm**
+1. Install and configure ArgoCD in your Kubernetes cluster with helm chart.
+2. Create a Helm chart for the application deployment.
+3. Connect the GitHub repository to ArgoCD for continuous deployment.
+4. Define Helm values and Kubernetes YAML manifests for seamless integration.
+
+### 6. **Monitoring and Logging**
+
+#### Prometheus and Grafana
+1. Deploy Prometheus to monitor application and cluster metrics.
+2. Install Grafana and create dashboards using Prometheus as the data source.
+
+#### Filebeat, OpenSearch, and Kibana
+1. Configure Filebeat to collect application and cluster logs.
+2. Set up OpenSearch to store logs.
+3. Use Kibana to visualize logs and create meaningful dashboards.
+
+---
+
+## Conclusion
+This guide enables you to build and manage a robust DevOps CI/CD pipeline locally. The tools and processes described can scale to production environments, providing a seamless development and deployment experience. For further enhancements, consider integrating cloud-based solutions for scalability and resilience.
+
+![Pipeline Diagram](./img/CICD.gif)
+
+---
 
 ### Use Case:
 
