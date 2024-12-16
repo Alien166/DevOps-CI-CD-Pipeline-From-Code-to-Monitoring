@@ -113,7 +113,7 @@ $ docker push username/app-name:tag
 ## Conclusion
 This guide enables you to build and manage a robust DevOps CI/CD pipeline locally. The tools and processes described can scale to production environments, providing a seamless development and deployment experience. For further enhancements, consider integrating cloud-based solutions for scalability and resilience.
 
-![Pipeline Diagram](./img/CICD.gif)
+![Pipeline Diagram](./img/CICD_DEVOPS.gif)
 
 ---
 
